@@ -6,7 +6,7 @@ namespace bankaccount
     {
         static void Main(string[] args)
         {
-            string initialPin = "1234"; // Default
+            string initialPin = "0000"; // Default
             BankAccount account = new BankAccount(initialPin);  // New instance
             BankAccountManager manager = new BankAccountManager(account);
 
@@ -42,6 +42,10 @@ namespace bankaccount
 
                 switch (commandInput)
                 {
+                    case "history":
+                        Console.Clear();
+                        manager.HandleTransactionHistory();
+                        break;
                     case "clear":
                         Console.Clear();
                         break;
@@ -49,6 +53,7 @@ namespace bankaccount
                         manager.ShowMenu();
                         break;
                     case "balance":
+                        Console.Clear();
                         account.DisplayBalance();
                         break;
                     case "deposit":

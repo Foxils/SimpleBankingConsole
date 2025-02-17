@@ -11,7 +11,7 @@
 
         public void ShowMenu()
         {
-            Console.WriteLine("\nCommands: Balance, Help, Deposit, Withdraw, Pin, Exit");
+            Console.WriteLine("\nCommands: Balance, Help, Deposit, Withdraw, Pin, History, Exit.");
         }
 
         public void HandleDeposit()
@@ -42,7 +42,7 @@
 
         public void HandlePinChange()
         {
-            Console.Write($"Your current PIN is {_account.GetPin()}, please enter your new PIN: ");
+            Console.Write($"Please enter your new PIN: ");
             string? newPin = Console.ReadLine();
 
             if (string.IsNullOrEmpty(newPin))
@@ -53,6 +53,13 @@
             {
                 _account.ChangePin(newPin);
             }
+
         }
+
+        public void HandleTransactionHistory()
+        {
+            _account.DisplayTransactionHistory();
+        }
+
     }
 }
