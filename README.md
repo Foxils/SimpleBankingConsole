@@ -1,3 +1,3 @@
 This was created to practice and understand basic C# concepts.
 
-Not for actual real world use.
+Incomplete but stores basic data such as PIN and balance values with the ability to withdraw / deposit funds whilst open. 
