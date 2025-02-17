@@ -1,3 +1,1 @@
-This was created to practice and understand basic C# concepts.
-
-Incomplete but stores basic data such as PIN and balance values with the ability to withdraw / deposit funds whilst active. 
+This was made to practice basic C# concepts, this application stores data like PIN and balance values, supporting withdrawal and deposit operations. It includes PIN hashing for basic security.
