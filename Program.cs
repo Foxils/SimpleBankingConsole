@@ -8,7 +8,7 @@ namespace bankaccount
         {
             string initialPin = "1234"; // Default
             BankAccount account = new BankAccount(initialPin);  // New instance
- BankAccountManager manager = new BankAccountManager(account);
+            BankAccountManager manager = new BankAccountManager(account);
 
             bool bankLocked = true;
 
