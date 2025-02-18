@@ -10,11 +10,10 @@
         private List<Transaction> _transactions;
         private string _hashedPin;
         private double _balance;
-        private const double MaxValue = 90000;
+        private const double MaxValue = 200000000;
 
         public BankAccount(string initialPin)
         {
-
             if (!File.Exists("pinstore.txt"))
             {
                 _hashedPin = FilesStore.HashPin(initialPin);  // Hash the initial PIN
@@ -22,7 +21,6 @@
             }
             else
             {
-
                 _hashedPin = FilesStore.LoadPinFromFile();
             }
 
@@ -30,11 +28,8 @@
             _transactions = new List<Transaction>();
         }
 
-
-
         public string GetPin()
         {
-
             return "PIN changed.";
         }
 
@@ -56,7 +51,6 @@
 
             if (newPin.Length == 4 && newPin.All(char.IsDigit))
             {
-
                 _hashedPin = hashedNewPin;
                 FilesStore.SavePinToFile(_hashedPin);
                 Console.WriteLine("Successfully changed your PIN.");
@@ -73,14 +67,14 @@
             {
                 Console.WriteLine("Deposit exceeds the maximum balance.");
             }
-            else if (amount <= 0 || amount > 5000)
+            else if (amount <= 0 || amount > 500000000)
             {
                 Console.WriteLine("Deposit must be positive and no more than £5000.");
             }
             else
             {
                 _balance += amount;
-                Console.WriteLine($"You have successfully deposited £{amount:F2}. Your total is £{_balance:F2}");
+                Console.WriteLine($"You have successfully deposited £{amount:N0}. Your total is £{_balance:N0}");
                 _transactions.Add(new Transaction("Deposit", amount, _balance));
             }
         }
@@ -94,7 +88,7 @@
             else if (amount <= _balance)
             {
                 _balance -= amount;
-                Console.WriteLine($"You have successfully withdrawn £{amount:F2}. Your total balance is £{_balance:F2}");
+                Console.WriteLine($"You have successfully withdrawn £{amount:N0}. Your total balance is £{_balance:N0}");
                 _transactions.Add(new Transaction("Withdrawal", amount, _balance));
             }
             else
@@ -105,19 +99,16 @@
 
         public void DisplayBalance()
         {
-            Console.WriteLine($"Your current balance is: £{_balance:F2}");
+            Console.WriteLine($"Your current balance is: £{_balance:N0}");
         }
-
 
         public void DisplayTransactionHistory()
         {
             Console.WriteLine("\nTransaction History:");
             foreach (var transaction in _transactions)
             {
-                Console.WriteLine($"{transaction.Date}: {transaction.Type} of £{transaction.Amount:F2} | Balance: £{transaction.BalanceAfterTransaction:F2}");
+                Console.WriteLine($"{transaction.Date}: {transaction.Type} of £{transaction.Amount:N0} | Balance: £{transaction.BalanceAfterTransaction:N0}");
             }
-
-
         }
 
         public class Transaction
@@ -133,14 +124,7 @@
                 Type = type;
                 Amount = amount;
                 BalanceAfterTransaction = balanceAfterTransaction;
-
             }
-
-
-
         }
-
-
-
     }
 }
