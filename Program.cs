@@ -28,7 +28,7 @@ namespace bankaccount
                     Console.Clear();
                     Console.Write("Welcome to Foxy Bank!\n\nWhat would you like to do today?");
 
-                    
+
 
                 }
                 else

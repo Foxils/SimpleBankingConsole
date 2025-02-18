@@ -14,7 +14,7 @@
             Console.WriteLine("\nCommands: Balance, Help, Deposit, Withdraw, Pin, History, Exit.");
         }
 
-        public void HandleDeposit()
+        public void HandleDeposit() // Takes the deposit and passes to class
         {
             Console.Write("Please enter how much to deposit: ");
             if (double.TryParse(Console.ReadLine(), out double amount))
@@ -27,7 +27,7 @@
             }
         }
 
-        public void HandleWithdraw()
+        public void HandleWithdraw() // Takes the withdraw and passes it over to the withdraw class
         {
             Console.Write("Please enter the amount you would like to withdraw: ");
             if (double.TryParse(Console.ReadLine(), out double amount))

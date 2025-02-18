@@ -1,9 +1,9 @@
 ﻿namespace bankaccount
 {
     using Newtonsoft.Json;
-    using System.Globalization;
     using System;
     using System.Collections.Generic;
+    using System.Globalization;
     using System.IO;
     using System.Linq;
 
@@ -32,14 +32,14 @@
             LoadTransactions();
         }
 
-        public void LoadTransactions()
+        public void LoadTransactions() // Load saved transactions
 
         {
             try
             {
                 if (File.Exists(TransactionsFilePath))
                 {
-                    var json = File.ReadAllText(TransactionsFilePath);
+                    string json = File.ReadAllText(TransactionsFilePath);
                     _transactions = JsonConvert.DeserializeObject<List<Transaction>>(json) ?? new List<Transaction>();
                 }
             }
@@ -49,24 +49,24 @@
             }
         }
 
-        public void SaveTransactionsToFile()
+        public void SaveTransactionsToFile() // Save transactions to a Json file
         {
             try
             {
 
 
-                var json = JsonConvert.SerializeObject(_transactions, Formatting.Indented);
+                string json = JsonConvert.SerializeObject(_transactions, Formatting.Indented);
                 File.WriteAllText(TransactionsFilePath, json);
 
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Something went wrong attempting to save transaction file: {ex.Message}");
+                Console.WriteLine($"Something went wrong saving the transaction file: {ex.Message}");
             }
         }
 
 
-        public string GetPin()
+        public string GetPin() // Get the users PIN
         {
             return "PIN changed.";
         }
@@ -77,7 +77,7 @@
             return hashedInput == _hashedPin;
         }
 
-        public void ChangePin(string newPin)
+        public void ChangePin(string newPin) // Change the users PIN via hash
         {
             string hashedNewPin = FilesStore.HashPin(newPin);
 
@@ -99,13 +99,13 @@
             }
         }
 
-        public void Deposit(double amount)
+        public void Deposit(double amount) // Deposit funds and check it does not exceed
         {
             if (_balance + amount > MaxValue)
             {
                 Console.WriteLine("Deposit exceeds the maximum balance.");
             }
-            else if (amount <= 0 || amount > 500000000)
+            else if (amount is <= 0 or > 500000000)
             {
                 Console.WriteLine("Deposit must be positive and no more than £5000.");
             }
@@ -118,7 +118,7 @@
             }
         }
 
-        public void Withdraw(double amount)
+        public void Withdraw(double amount) // Checks if the user attempts to go into the negative and withdraws.
         {
             if (amount < 0)
             {
@@ -137,7 +137,7 @@
             }
         }
 
-        public void DisplayBalance()
+        public void DisplayBalance() // Displays current balance from the saved Json file and checks for IO errors.
         {
             Console.WriteLine($"Your current balance is: £{_balance:N0}");
         }
@@ -146,14 +146,15 @@
         {
             Console.WriteLine("\nTransaction History:");
 
-            try { 
-            foreach (var transaction in _transactions)
+            try
             {
-                string formattedAmount = transaction.Amount.ToString("N2", new CultureInfo("en-GB"));
-                string formattedBalance = transaction.BalanceAfterTransaction.ToString("N2", new CultureInfo("en-GB"));
+                foreach (Transaction transaction in _transactions)
+                {
+                    string formattedAmount = transaction.Amount.ToString("N2", new CultureInfo("en-GB"));
+                    string formattedBalance = transaction.BalanceAfterTransaction.ToString("N2", new CultureInfo("en-GB"));
 
-                Console.WriteLine($"{transaction.Date}: {transaction.Type} of £{transaction.Amount:N0} | Balance: £{transaction.BalanceAfterTransaction:N0}");
-            }
+                    Console.WriteLine($"{transaction.Date}: {transaction.Type} of £{transaction.Amount:N0} | Balance: £{transaction.BalanceAfterTransaction:N0}");
+                }
             }
             catch (Exception ex)
             {
@@ -163,29 +164,6 @@
 
         }
 
-        public class Transaction
-        {
-            [JsonConstructor]
-            public Transaction(string type, double amount, double balanceAfterTransaction)
-            {
-                Date = DateTime.Now;
-                Type = type;
-                Amount = amount;
-                BalanceAfterTransaction = balanceAfterTransaction;
-            }
 
-            public Transaction(string type, double amount, double balanceAfterTransaction, DateTime date)
-            {
-                Date = date;
-                Type = type;
-                Amount = amount;
-                BalanceAfterTransaction = balanceAfterTransaction;
-            }
-
-            public DateTime Date { get; }  // Get date, type, amount of the transaction.
-            public string Type { get; }
-            public double Amount { get; }
-            public double BalanceAfterTransaction { get; }
-        }
     }
 }
