@@ -1,14 +1,21 @@
-﻿using System.Security.Cryptography;
+﻿using System;
+using System.IO;
+using System.Security.Cryptography;
 using System.Text;
 
 namespace bankaccount
 {
-    internal class FilesStore
+    internal static class FilesStore
     {
-        private static string filePath = "pinstore.txt";
+        private static readonly string FilePath = "pinstore.txt";
 
-        public static string HashPin(string pin) // Hashing is unsafe and pointless if the PIN file is deleted but fine for this.
+        public static string HashPin(string pin)
         {
+            if (string.IsNullOrWhiteSpace(pin))
+            {
+                throw new ArgumentException("PIN cannot be null or whitespace.", nameof(pin));
+            }
+
             using (SHA256 sha256 = SHA256.Create())
             {
                 byte[] hashBytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(pin));
@@ -18,22 +25,20 @@ namespace bankaccount
 
         public static void SavePinToFile(string hashedPin)
         {
-            File.WriteAllText(filePath, hashedPin);
+            if (hashedPin is null)
+            {
+                throw new ArgumentNullException(nameof(hashedPin));
+            }
+            File.WriteAllText(FilePath, hashedPin);
         }
-
 
         public static string LoadPinFromFile()
         {
-            if (File.Exists(filePath))
+            if (!File.Exists(FilePath))
             {
-                return File.ReadAllText(filePath);
+                throw new FileNotFoundException("PIN file not found.", FilePath);
             }
-            else
-            {
-                throw new FileNotFoundException("PIN file not found.");
-            }
+            return File.ReadAllText(FilePath);
         }
     }
 }
-
-
