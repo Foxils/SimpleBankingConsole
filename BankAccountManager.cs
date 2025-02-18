@@ -44,14 +44,20 @@
         {
             Console.Write($"Please enter your new PIN: ");
             string? newPin = Console.ReadLine();
-
-            if (string.IsNullOrEmpty(newPin))
+            try
             {
-                Console.WriteLine("Invalid PIN. Please enter a valid PIN.");
+                if (string.IsNullOrEmpty(newPin))
+                {
+                    Console.WriteLine("Invalid PIN. Please enter a valid PIN.");
+                }
+                else
+                {
+                    _account.ChangePin(newPin);
+                }
             }
-            else
+            catch (Exception ex)
             {
-                _account.ChangePin(newPin);
+                Console.WriteLine($"Something went wrong whilst changing the PIN: {ex.Message}");
             }
 
         }

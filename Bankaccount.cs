@@ -1,5 +1,7 @@
 ﻿namespace bankaccount
 {
+    using Newtonsoft.Json;
+    using System.Globalization;
     using System;
     using System.Collections.Generic;
     using System.IO;
@@ -11,6 +13,7 @@
         private string _hashedPin;
         private double _balance;
         private const double MaxValue = 200000000;
+        private const string TransactionsFilePath = "transactions.json";
 
         public BankAccount(string initialPin)
         {
@@ -26,7 +29,42 @@
 
             _balance = 0;
             _transactions = new List<Transaction>();
+            LoadTransactions();
         }
+
+        public void LoadTransactions()
+
+        {
+            try
+            {
+                if (File.Exists(TransactionsFilePath))
+                {
+                    var json = File.ReadAllText(TransactionsFilePath);
+                    _transactions = JsonConvert.DeserializeObject<List<Transaction>>(json) ?? new List<Transaction>();
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.Write($"Something went wrong loading transactions file: {ex.Message}");
+            }
+        }
+
+        public void SaveTransactionsToFile()
+        {
+            try
+            {
+
+
+                var json = JsonConvert.SerializeObject(_transactions, Formatting.Indented);
+                File.WriteAllText(TransactionsFilePath, json);
+
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Something went wrong attempting to save transaction file: {ex.Message}");
+            }
+        }
+
 
         public string GetPin()
         {
@@ -76,6 +114,7 @@
                 _balance += amount;
                 Console.WriteLine($"You have successfully deposited £{amount:N0}. Your total is £{_balance:N0}");
                 _transactions.Add(new Transaction("Deposit", amount, _balance));
+                SaveTransactionsToFile();
             }
         }
 
@@ -90,6 +129,7 @@
                 _balance -= amount;
                 Console.WriteLine($"You have successfully withdrawn £{amount:N0}. Your total balance is £{_balance:N0}");
                 _transactions.Add(new Transaction("Withdrawal", amount, _balance));
+                SaveTransactionsToFile();
             }
             else
             {
@@ -105,19 +145,27 @@
         public void DisplayTransactionHistory()
         {
             Console.WriteLine("\nTransaction History:");
+
+            try { 
             foreach (var transaction in _transactions)
             {
+                string formattedAmount = transaction.Amount.ToString("N2", new CultureInfo("en-GB"));
+                string formattedBalance = transaction.BalanceAfterTransaction.ToString("N2", new CultureInfo("en-GB"));
+
                 Console.WriteLine($"{transaction.Date}: {transaction.Type} of £{transaction.Amount:N0} | Balance: £{transaction.BalanceAfterTransaction:N0}");
             }
+            }
+            catch (Exception ex)
+            {
+                Console.Write($"Something went wrong showing transaction history: {ex.Message}");
+            }
+
+
         }
 
         public class Transaction
         {
-            public DateTime Date { get; }  // Get date, type, amount of the transaction.
-            public string? Type { get; }
-            public double Amount { get; }
-            public double BalanceAfterTransaction { get; }
-
+            [JsonConstructor]
             public Transaction(string type, double amount, double balanceAfterTransaction)
             {
                 Date = DateTime.Now;
@@ -125,6 +173,19 @@
                 Amount = amount;
                 BalanceAfterTransaction = balanceAfterTransaction;
             }
+
+            public Transaction(string type, double amount, double balanceAfterTransaction, DateTime date)
+            {
+                Date = date;
+                Type = type;
+                Amount = amount;
+                BalanceAfterTransaction = balanceAfterTransaction;
+            }
+
+            public DateTime Date { get; }  // Get date, type, amount of the transaction.
+            public string Type { get; }
+            public double Amount { get; }
+            public double BalanceAfterTransaction { get; }
         }
     }
 }

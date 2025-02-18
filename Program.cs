@@ -14,7 +14,7 @@ namespace bankaccount
 
             while (bankLocked)
             {
-                Console.Write("Please enter your PIN now: ");
+                Console.Write($" Welcome {Environment.UserName} please enter your PIN: ");
                 Console.Title = "Foxy TSB";
                 string? pininput = Console.ReadLine();
 
@@ -27,6 +27,9 @@ namespace bankaccount
                     bankLocked = false;
                     Console.Clear();
                     Console.Write("Welcome to Foxy Bank!\n\nWhat would you like to do today?");
+
+                    
+
                 }
                 else
                 {

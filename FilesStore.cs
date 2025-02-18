@@ -1,6 +1,4 @@
-﻿using System;
-using System.IO;
-using System.Security.Cryptography;
+﻿using System.Security.Cryptography;
 using System.Text;
 
 namespace bankaccount
@@ -40,5 +38,10 @@ namespace bankaccount
             }
             return File.ReadAllText(FilePath);
         }
+
+
+
+
     }
+
 }
